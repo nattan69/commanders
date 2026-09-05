@@ -27,6 +27,31 @@ class StaffOut(StaffBase):
 
 
 # ============================================================
+# AUTENTICACIÓN POR PIN (login de camarero en su dispositivo)
+# ============================================================
+class StaffLogin(BaseModel):
+    pin: str
+    device_name: Optional[str] = None
+
+
+class DeviceSessionOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    staff_id: UUID
+    device_name: Optional[str] = None
+    token: str
+    is_active: bool
+    created_at: Optional[datetime] = None
+    last_seen_at: Optional[datetime] = None
+
+
+class LoginResponse(BaseModel):
+    token: str
+    staff: StaffOut
+    session: DeviceSessionOut
+
+
+# ============================================================
 # TABLES / AREAS
 # ============================================================
 class AreaBase(BaseModel):

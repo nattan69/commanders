@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from ...db import get_db
-from ...models.models import Staff
-from ...schemas.schemas import StaffCreate, StaffOut
+from ...models.models import Staff, DeviceSession
+from ...schemas.schemas import StaffCreate, StaffOut, StaffLogin, LoginResponse, DeviceSessionOut
 
 router = APIRouter()
 
@@ -22,6 +22,39 @@ def create_staff(payload: StaffCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(staff)
     return staff
+
+
+@router.post("/login", response_model=LoginResponse)
+def login(payload: StaffLogin, db: Session = Depends(get_db)):
+    """Login de camarero por PIN en su dispositivo (PDA/móvil/tablet).
+
+    Crea una sesión de dispositivo con un token único. Cada dispositivo
+    (PDA/móvil) tiene su propia sesión independiente.
+    """
+    staff = db.query(Staff).filter(Staff.pin == payload.pin, Staff.is_active == True).first()
+    if not staff:
+        raise HTTPException(status_code=401, detail="PIN inválido")
+
+    token = str(uuid4())
+    session = DeviceSession(
+        staff_id=staff.id,
+        device_name=payload.device_name,
+        token=token,
+    )
+    db.add(session)
+    db.commit()
+    db.refresh(session)
+
+    return LoginResponse(token=token, staff=staff, session=session)
+
+
+@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
+def logout(token: str, db: Session = Depends(get_db)):
+    """Cierra la sesión de dispositivo (invalida el token)."""
+    session = db.query(DeviceSession).filter(DeviceSession.token == token).first()
+    if session:
+        session.is_active = False
+        db.commit()
 
 
 @router.get("/{staff_id}", response_model=StaffOut)

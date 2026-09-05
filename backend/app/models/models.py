@@ -27,6 +27,22 @@ class Staff(Base):
 
 
 # ============================================================
+# SESIONES DE DISPOSITIVO (PDA / móvil / tablet por camarero)
+# ============================================================
+class DeviceSession(Base):
+    __tablename__ = 'device_sessions'
+    id = uuid_pk()
+    staff_id = Column(UUID(as_uuid=True), ForeignKey('staff.id', ondelete='CASCADE'), nullable=False)
+    device_name = Column(String)  # "PDA Pep", "iPhone Maria", "Tablet barra"...
+    token = Column(String, unique=True, nullable=False)  # token de sesión (UUID)
+    is_active = Column(Boolean, default=True, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    last_seen_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    staff = relationship("Staff")
+
+
+# ============================================================
 # SALA Y MESAS
 # ============================================================
 class Area(Base):

@@ -42,9 +42,23 @@ def main():
         print("artículo:", r.json()["name"], r.json()["price"])
 
         # Staff
-        r = client.post("/api/v1/staff", json={"full_name": "Pep", "role": "waiter"})
+        r = client.post("/api/v1/staff", json={"full_name": "Pep", "role": "waiter", "pin": "1234"})
         assert r.status_code == 201, r.text
         staff_id = r.json()["id"]
+
+        # --- Login por PIN (sesión de dispositivo PDA/móvil) ---
+        r = client.post("/api/v1/staff/login", json={"pin": "1234", "device_name": "PDA Pep"})
+        assert r.status_code == 200, r.text
+        login = r.json()
+        token = login["token"]
+        assert login["staff"]["id"] == staff_id
+        assert login["session"]["device_name"] == "PDA Pep"
+        print("login PIN:", login["staff"]["full_name"], "| device:", login["session"]["device_name"], "| token:", token[:8], "...")
+
+        # PIN inválido → 401
+        r = client.post("/api/v1/staff/login", json={"pin": "0000"})
+        assert r.status_code == 401, r.text
+        print("PIN inválido rechazado (401) ✓")
 
         # Comanda con items (snapshot automático desde el menú)
         r = client.post("/api/v1/orders", json={
