@@ -97,6 +97,10 @@ class Reservation(Base):
     reservation_time = Column(String, nullable=False)  # "20:30"
     status = Column(String, default='confirmed')  # pending, confirmed, seated, cancelled, no_show
     notes = Column(Text)
+    # --- Integración con Ariadna (recepción de reservas multicanal) ---
+    source = Column(String, default='manual')  # manual, phone, email, whatsapp, telegram, web, ariadna
+    external_id = Column(String)  # ID de la reserva en el sistema de origen (Ariadna) — idempotencia
+    created_by = Column(String, default='staff')  # staff, ariadna, web
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 

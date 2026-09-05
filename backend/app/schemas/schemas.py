@@ -128,6 +128,9 @@ class ReservationBase(BaseModel):
     reservation_time: str
     status: str = "confirmed"
     notes: Optional[str] = None
+    source: str = "manual"
+    external_id: Optional[str] = None
+    created_by: str = "staff"
 
 
 class ReservationCreate(ReservationBase):

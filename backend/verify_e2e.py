@@ -79,6 +79,40 @@ def main():
         assert fiscal2["previous_chain_hash"] == fiscal["chain_hash"], "¡Cadena rota!"
         print("cadena verificada: previous == hash anterior ✓")
 
+        # --- Integración con Ariadna (reservas multicanal) ---
+        # Ariadna envía una reserva con external_id (idempotencia)
+        r = client.post("/api/v1/integrations/reservations", json={
+            "customer_name": "Maria Antònia",
+            "customer_phone": "600123456",
+            "party_size": 4,
+            "reservation_date": "2026-09-12",
+            "reservation_time": "21:00",
+            "source": "whatsapp",
+            "external_id": "ariadna-res-001",
+        })
+        assert r.status_code == 201, r.text
+        res = r.json()
+        print("reserva Ariadna:", res["customer_name"], "| source:", res["source"], "| created_by:", res["created_by"])
+
+        # Reenvío del mismo external_id → debe devolver la misma reserva (idempotente)
+        r2 = client.post("/api/v1/integrations/reservations", json={
+            "customer_name": "Maria Antònia",
+            "customer_phone": "600123456",
+            "party_size": 4,
+            "reservation_date": "2026-09-12",
+            "reservation_time": "21:00",
+            "source": "whatsapp",
+            "external_id": "ariadna-res-001",
+        })
+        assert r2.status_code == 201, r2.text
+        assert r2.json()["id"] == res["id"], "¡Idempotencia rota: se duplicó la reserva!"
+        print("idempotencia verificada: mismo id para external_id duplicado ✓")
+
+        # Listado para Ariadna
+        r = client.get("/api/v1/integrations/reservations?source=whatsapp")
+        assert r.status_code == 200, r.text
+        print("reservas visibles para Ariadna:", len(r.json()))
+
     # Verificar tablas creadas
     insp = inspect(engine)
     tables = sorted(insp.get_table_names())
