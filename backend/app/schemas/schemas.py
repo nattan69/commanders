@@ -1,0 +1,212 @@
+from pydantic import BaseModel, Field, ConfigDict
+from typing import Optional, List
+from datetime import datetime, date
+from uuid import UUID
+
+
+# ============================================================
+# STAFF
+# ============================================================
+class StaffBase(BaseModel):
+    full_name: str
+    email: Optional[str] = None
+    phone: Optional[str] = None
+    role: str = "waiter"
+    pin: Optional[str] = None
+    is_active: bool = True
+
+
+class StaffCreate(StaffBase):
+    pass
+
+
+class StaffOut(StaffBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    created_at: Optional[datetime] = None
+
+
+# ============================================================
+# TABLES / AREAS
+# ============================================================
+class AreaBase(BaseModel):
+    name: str
+    position_x: int = 0
+    position_y: int = 0
+    surcharge_percent: float = 0
+
+
+class AreaCreate(AreaBase):
+    pass
+
+
+class AreaOut(AreaBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+
+
+class TableBase(BaseModel):
+    area_id: Optional[UUID] = None
+    number: str
+    seats: int = 4
+    position_x: int = 0
+    position_y: int = 0
+    shape: str = "square"
+    status: str = "available"
+    is_active: bool = True
+
+
+class TableCreate(TableBase):
+    pass
+
+
+class TableUpdate(BaseModel):
+    area_id: Optional[UUID] = None
+    number: Optional[str] = None
+    seats: Optional[int] = None
+    position_x: Optional[int] = None
+    position_y: Optional[int] = None
+    shape: Optional[str] = None
+    status: Optional[str] = None
+    is_active: Optional[bool] = None
+
+
+class TableOut(TableBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+
+
+# ============================================================
+# MENU
+# ============================================================
+class MenuCategoryBase(BaseModel):
+    name: str
+    sort_order: int = 0
+    is_active: bool = True
+
+
+class MenuCategoryCreate(MenuCategoryBase):
+    pass
+
+
+class MenuCategoryOut(MenuCategoryBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+
+
+class MenuItemBase(BaseModel):
+    category_id: Optional[UUID] = None
+    name: str
+    description: Optional[str] = None
+    price: float
+    vat_rate: float = 10.0
+    kitchen_station: str = "main"
+    allergens: Optional[List[str]] = None
+    is_available: bool = True
+    is_active: bool = True
+
+
+class MenuItemCreate(MenuItemBase):
+    pass
+
+
+class MenuItemOut(MenuItemBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+
+
+# ============================================================
+# RESERVATIONS
+# ============================================================
+class ReservationBase(BaseModel):
+    table_id: Optional[UUID] = None
+    customer_name: str
+    customer_phone: Optional[str] = None
+    customer_email: Optional[str] = None
+    party_size: int = 2
+    reservation_date: date
+    reservation_time: str
+    status: str = "confirmed"
+    notes: Optional[str] = None
+
+
+class ReservationCreate(ReservationBase):
+    pass
+
+
+class ReservationOut(ReservationBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    created_at: Optional[datetime] = None
+
+
+# ============================================================
+# ORDERS
+# ============================================================
+class OrderItemCreate(BaseModel):
+    menu_item_id: Optional[UUID] = None
+    name_snapshot: Optional[str] = None
+    price_snapshot: Optional[float] = None
+    quantity: int = 1
+    vat_rate: float = 10.0
+    modifications: Optional[List[str]] = None
+    seat_number: Optional[int] = None
+
+
+class OrderItemOut(OrderItemCreate):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    status: str
+
+
+class OrderCreate(BaseModel):
+    table_id: Optional[UUID] = None
+    staff_id: Optional[UUID] = None
+    order_type: str = "dine_in"
+    notes: Optional[str] = None
+    items: List[OrderItemCreate] = []
+
+
+class OrderOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    table_id: Optional[UUID] = None
+    staff_id: Optional[UUID] = None
+    order_type: str
+    status: str
+    total_amount: float
+    discount_amount: float
+    notes: Optional[str] = None
+    opened_at: Optional[datetime] = None
+    closed_at: Optional[datetime] = None
+    items: List[OrderItemOut] = []
+
+
+# ============================================================
+# PAYMENTS
+# ============================================================
+class PaymentCreate(BaseModel):
+    order_id: UUID
+    method: str
+    amount: float
+
+
+class PaymentOut(PaymentCreate):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    status: str
+    paid_at: Optional[datetime] = None
+
+
+# ============================================================
+# FISCAL
+# ============================================================
+class FiscalRecordOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: UUID
+    order_id: Optional[UUID] = None
+    record_id: str
+    chain_hash: str
+    previous_chain_hash: Optional[str] = None
+    record_type: str
+    issued_at: datetime
