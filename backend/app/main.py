@@ -12,7 +12,7 @@ async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     yield
 
-app = FastAPI(title="Commanders Backend", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="Comanda Backend", version="0.1.0", lifespan=lifespan)
 
 # Configuración de CORS
 app.add_middleware(

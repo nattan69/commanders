@@ -1,12 +1,12 @@
-# Commanders TPV — Guió d'estat i pròximes passes
+# Comanda TPV — Guió d'estat i pròximes passes
 
 > Actualitzat: 06/09/2026 (nit)
-> Projecte: TPV per bar/restaurant — `D:/projectes/Commanders`
-> Repo: `github.com/nattan69/commanders`
+> Projecte: TPV per bar/restaurant — `D:/projectes/Comanda`
+> Repo: `github.com/nattan69/comanda`
 
 ---
 
-## 1. Què és Commanders
+## 1. Què és Comanda
 
 TPV (punt de venda) per a bars i restaurants, amb 4 mòduls principals:
 
@@ -118,4 +118,4 @@ TPV (punt de venda) per a bars i restaurants, amb 4 mòduls principals:
 - **Codi en castellà** (convenció per a Gemma4 i el projecte)
 - **Gemma4 no commiteja** — Maria revisa, verifica amb TestClient, commiteja i puja
 - **Verificació**: `backend/verify_e2e.py` (TestClient) — passa tot el flux end-to-end
-- **BD dev**: `backend/commanders.db` (SQLite, esborrable per a proves)
+- **BD dev**: `backend/comanda.db` (SQLite, esborrable per a proves)

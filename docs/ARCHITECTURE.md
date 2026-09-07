@@ -1,4 +1,4 @@
-# Arquitectura — Commanders TPV
+# Arquitectura — Comanda TPV
 
 ## Visión general
 

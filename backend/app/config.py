@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     # VeriFactu (cumplimiento fiscal)
     # Nombre del software declarado ante la AEAT
-    VERIFACTU_SOFTWARE_NAME: str = "Commanders TPV"
+    VERIFACTU_SOFTWARE_NAME: str = "Comanda TPV"
     VERIFACTU_SOFTWARE_VERSION: str = "0.1.0"
     VERIFACTU_DEVELOPER_NIF: str = ""
 

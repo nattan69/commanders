@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from .config import settings
 
 # Fallback a SQLite si no hay DATABASE_URL
-DATABASE_URL = settings.DATABASE_URL or "sqlite:///./commanders.db"
+DATABASE_URL = settings.DATABASE_URL or "sqlite:///./comanda.db"
 
 engine = create_engine(
     DATABASE_URL,

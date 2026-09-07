@@ -1,4 +1,4 @@
-# Commanders — TPV para bar/restaurante
+# Comanda — TPV para bar/restaurante
 
 Sistema de punto de venta (TPV) para bares y restaurantes, con gestión de
 reservas, comandas, mesas y personal. Proyecto independiente de Jornals y
@@ -31,7 +31,7 @@ payload canónico), preparada para la firma electrónica en producción.
 ## Estructura
 
 ```
-Commanders/
+Comanda/
 ├── backend/          # API FastAPI
 │   ├── app/
 │   │   ├── main.py           # Punto de entrada, routers, CORS

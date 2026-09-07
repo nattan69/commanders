@@ -1,4 +1,4 @@
-# Commanders 🍽️
+# Comanda 🍽️
 
 TPV (punto de venta) para bares y restaurantes: reservas, comandas, mesas y
 personal. Backend FastAPI + frontend Next.js, preparado para VeriFactu.

@@ -1,4 +1,4 @@
-"""Verificación end-to-end del backend Commanders con TestClient.
+"""Verificación end-to-end del backend Comanda con TestClient.
 
 Prueba el flujo completo: crear área → mesa → categoría → artículo →
 staff → comanda con items → emitir registro fiscal (hash encadenado).

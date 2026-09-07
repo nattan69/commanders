@@ -1,5 +1,5 @@
 -- ============================================================
--- Commanders TPV — Esquema de referencia (PostgreSQL)
+-- Comanda TPV — Esquema de referencia (PostgreSQL)
 -- Generado a partir de los modelos SQLAlchemy (app/models/models.py)
 -- ============================================================
 
